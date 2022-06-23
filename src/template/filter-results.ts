@@ -47,7 +47,7 @@ export function filterResultsTemplate () {
     label = capitalizeFirstLetter(profileFromSession)
   }
 
-  // initial loading of the component
+  // loading of the component
   window.addEventListener('load', (event) => {
     const filterButton = document.querySelector('.qg-btn__filter')
     filterButton?.addEventListener('click', e => {})
