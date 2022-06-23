@@ -2,7 +2,7 @@ import { render } from 'lit-html'
 import { mainTemplate } from '../template/main'
 import { relatedResultsTemplate } from '../template/related-search'
 import { urlParameterMap } from '../utils/urlParameter'
-import { funnelbackApiUrl } from '../utils/constants'
+import { API_URL } from '../utils/constants'
 
 export class SearchModule {
   private spinnerEl: HTMLInputElement | null
@@ -30,7 +30,7 @@ export class SearchModule {
      * */
   async fetchData () {
     this.spinnerEl?.removeAttribute('hidden')
-    const response = await fetch(`${funnelbackApiUrl}?query=${this.urlParameter.query}&num_ranks=${this.urlParameter.numRanks}&tiers=off&collection=${this.urlParameter.collection}&profile=${this.urlParameter.profile}&scope=${this.urlParameter.scope}&start_rank=${this.urlParameter.startRank}`)
+    const response = await fetch(`${API_URL}?query=${this.urlParameter.query}&num_ranks=${this.urlParameter.numRanks}&tiers=off&collection=${this.urlParameter.collection}&profile=${this.urlParameter.profile}&scope=${this.urlParameter.scope}&start_rank=${this.urlParameter.startRank}`)
     return await response.json()
   }
 

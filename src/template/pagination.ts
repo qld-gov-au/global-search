@@ -55,15 +55,14 @@ export function paginationTemplate (response: Response, paramMap: ParamMap) {
     return html`
   <div class="pagination-container">
         <ul class="pagination">
-            
             <li class="page-item">
                 ${currUrlParameterMap.startRank > 1 ? html`<a class="page-link"  @click="${onPageClick}" href="${buildHref}&page=${currUrlParameterMap.activePage - 1}&start_rank=${currUrlParameterMap.startRank - 10}"><span aria-hidden="true">«</span> Previous</a>` : ''}
             </li>
             ${range(paginationStartValue(), paginationEndValue()).map(i => {
-      const addParam = buildHref + `&page=${i}&start_rank=${((currUrlParameterMap.numRanks || paginationOnPage) * (i - 1)) + 1}`
-      const determineActivePage = currUrlParameterMap.activePage === i ? 'active' : ''
-      return html`<li class="page-item ${determineActivePage}"><a class="page-link" @click="${onPageClick}"  href=${addParam}>${i}</a></li>`
-    })}
+                const addParam = buildHref + `&page=${i}&start_rank=${((currUrlParameterMap.numRanks || paginationOnPage) * (i - 1)) + 1}`
+                const determineActivePage = currUrlParameterMap.activePage === i ? 'active' : ''
+                return html`<li class="page-item ${determineActivePage}"><a class="page-link" @click="${onPageClick}"  href=${addParam}>${i}</a></li>`
+            })}
             <li class="page-item">
                 ${numberOfPages > currUrlParameterMap.activePage ? html`<a class="page-link" @click="${onPageClick}" href="${buildHref}&page=${currUrlParameterMap.activePage + 1}&start_rank=${currUrlParameterMap.startRank + 10}">Next<span aria-hidden="true">&nbsp;»</span></a>` : ''}
             </li>
