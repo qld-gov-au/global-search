@@ -8,7 +8,7 @@ export function searchResultsTemplate (resultPacket: { contextualNavigation: any
 
   return html`<div id="qg-search-results">
         <h2 class="qg-search-results__summary">Search results for '${searchTerm}'</h2>
-        <span class="qg-search-results__results-count">Showing results ${currStart} - ${currEnd} of ${formatNumber(totalMatching)}</span>
+        <span class="qg-search-results__results-count">Showing results ${currStart} - ${currEnd} of <span class="qg-search-results__results-total">${formatNumber(totalMatching)}</span></span>
         <ul class="qg-search-results__results-list">
             ${resultPacket.results.map((result: any) => html`
                 <li class="qg-search-results__results-list-item">

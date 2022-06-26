@@ -54,3 +54,10 @@
 .qg-search-state__container .fa {
     line-height: inherit;
 }
+
+
+@media (max-width: 991.98px) {
+    .qg-breadcrumb-list-item {
+        display: inherit;
+    }
+}
