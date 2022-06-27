@@ -1,5 +1,5 @@
 import { html } from 'lit-html'
-import { formatNumber } from '../utils/formatNumber'
+import { formatNumber, formatSize, formatDate } from '../utils/formatContent'
 
 export function searchResultsTemplate (resultPacket: { contextualNavigation: any; resultsSummary: any; results: any; }) {
   const { currStart, currEnd, totalMatching } = resultPacket.resultsSummary
@@ -8,7 +8,7 @@ export function searchResultsTemplate (resultPacket: { contextualNavigation: any
 
   return html`<div id="qg-search-results">
         <h2 class="qg-search-results__summary">Search results for '${searchTerm}'</h2>
-        <span class="qg-search-results__results-count">Showing results ${currStart} - ${currEnd} of ${formatNumber(totalMatching)}</span>
+        <span class="qg-search-results__results-count">Showing results ${currStart} - ${currEnd} of <span class="qg-search-results__results-total">${formatNumber(totalMatching)}</span></span>
         <ul class="qg-search-results__results-list">
             ${resultPacket.results.map((result: any) => html`
                 <li class="qg-search-results__results-list-item">
@@ -18,8 +18,8 @@ export function searchResultsTemplate (resultPacket: { contextualNavigation: any
                     <ul class="qg-search-results__results-list">
                         <li class="description"> ${result.metaData.C}</li>
                         <li class="meta"><span class="qg-search-results__url">${result.indexUrl}</span> - <span
-                                class="file-size">${result.fileSize}</span> - <span
-                                class="date-updated">${result.date}</span></li>
+                                class="file-size">${formatSize(result.fileSize)}</span> - <span
+                                class="date-updated">${formatDate(result.date)}</span></li>
                     </ul>
                 </li>`
             )}
