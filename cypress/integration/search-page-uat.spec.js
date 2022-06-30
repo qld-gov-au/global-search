@@ -2,7 +2,7 @@ const ROOT_URL = 'http://localhost:1234'
 
 const wt = 500;
 function formatString(text) {
-  return text.replace(',','');
+  return text.replace(/,/g, '');
 }
 
 context('Search page', () => {
