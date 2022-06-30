@@ -1,9 +1,9 @@
 import { html } from 'lit-html'
 import { formatNumber, formatSize, formatDate } from '../utils/formatContent'
 
-export function searchResultsTemplate (resultPacket: { contextualNavigation: any; resultsSummary: any; results: any; }) {
+export function searchResultsTemplate (resultPacket: { query: any, contextualNavigation: any; resultsSummary: any; results: any; }) {
   const { currStart, currEnd, totalMatching } = resultPacket.resultsSummary
-  const { searchTerm } = resultPacket.contextualNavigation
+  const searchTerm = resultPacket.query
   const customizeTitle = (title: string) => title.replace('| Queensland Government', '')
 
   return html`<div id="qg-search-results">

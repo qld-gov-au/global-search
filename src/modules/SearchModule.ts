@@ -40,9 +40,13 @@ export class SearchModule {
      * */
   processData () {
     this.fetchData().then(data => {
+      const { contextualNavigation } = data.response.resultPacket;
+
       this.spinnerEl?.setAttribute('hidden', '')
       render(mainTemplate(data?.response, this.urlParameter), document.getElementById('qg-search-results__container') as HTMLBodyElement)
-      render(relatedResultsTemplate(data?.response?.resultPacket?.contextualNavigation), document.getElementById('related-search__tags') as HTMLBodyElement)
+      if(contextualNavigation){
+        render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags') as HTMLBodyElement)
+      }
     })
   }
 }
