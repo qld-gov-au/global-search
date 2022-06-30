@@ -1,5 +1,10 @@
 const ROOT_URL = 'http://localhost:1234'
 
+const wt = 500;
+function formatString(text) {
+  return text.replace(',','');
+}
+
 context('Search page', () => {
   it('Filter should not be visible if scope or profile are not present in the URL', () => {
     cy.visit(`${ROOT_URL}/`)
@@ -21,13 +26,18 @@ context('Search page', () => {
       .should('be.visible')
   })
 
+
   it('Select a radio button to determine the number of results', () => {
+    cy.get('.qg-search-results__results-total').invoke('text').then(formatString).then(parseInt).should('be.gt', 1426)
     cy.get('input[name=filterBy][value=\'qld\']').first().check()
     cy.get('.qg-btn__filter').click()
-    cy.get('.qg-search-results__results-total').contains('28,696')
+    cy.wait(wt)
+    cy.get('.qg-search-results__results-total').invoke('text').then(formatString).then(parseInt).should('be.gt', 29355)
+    cy.wait(wt)
     cy.get('input[name=filterBy][value=\'custom\']').first().check()
     cy.get('.qg-btn__filter').click()
-    cy.get('.qg-search-results__results-total').contains('1,426')
+    cy.wait(wt)
+    cy.get('.qg-search-results__results-total').invoke('text').then(formatString).then(parseInt).should('be.gt', 1426)
   })
 
   // profile is present with no scope
@@ -39,12 +49,14 @@ context('Search page', () => {
   })
 
   it('Check results by changing filters', () => {
+    cy.get('.qg-search-results__results-total').invoke('text').then(formatString).then(parseInt).should('be.gt', 1450)
     cy.get('input[name=filterBy][value=\'qld\']').first().check()
     cy.get('.qg-btn__filter').click()
-    var getNumber = cy.get('.qg-search-results__results-total')
-    cy.wrap(getNumber).should('be.gt', 4999.99);
+    cy.wait(wt)
+    cy.get('.qg-search-results__results-total').invoke('text').then(formatString).then(parseInt).should('be.gt', 29355)
     cy.get('input[name=filterBy][value=\'custom\']').first().check()
     cy.get('.qg-btn__filter').click()
-    cy.get('.qg-search-results__results-total').contains('1,444')
+    cy.wait(wt)
+    cy.get('.qg-search-results__results-total').invoke('text').then(formatString).then(parseInt).should('be.gt', 1450)
   })
 })
