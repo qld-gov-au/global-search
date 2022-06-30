@@ -41,7 +41,7 @@ export class SearchModule {
      * */
   processData () {
     this.fetchData().then(data => {
-      const { contextualNavigation, results } = data.response.resultPacket;
+      const { contextualNavigation, results } = data?.response?.resultPacket;
       if(results.length > 0){
         this.spinnerEl?.setAttribute('hidden', '')
         render(mainTemplate(data?.response, this.urlParameter), document.getElementById('qg-search-results__container')!)
