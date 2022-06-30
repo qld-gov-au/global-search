@@ -1,7 +1,7 @@
 import { html } from 'lit-html'
 import { formatNumber, formatSize, formatDate } from '../utils/formatContent'
 
-export function searchResultsTemplate(resultPacket: { query: string; contextualNavigation: { searchTerm: string; currStart: string; currEnd: string; totalMatching: string }; resultsSummary: { currStart: number; currEnd: number; totalMatching: number }; results: Array<any> }) {
+export function searchResultsTemplate(resultPacket: { query: string; resultsSummary:any ; results: Array<any> }) {
   const { currStart, currEnd, totalMatching } = resultPacket?.resultsSummary
   const searchTerm = resultPacket.query
   const customizeTitle = (title: string) => title.replace('| Queensland Government', '')

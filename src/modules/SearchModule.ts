@@ -3,6 +3,7 @@ import { mainTemplate } from '../template/main'
 import { relatedResultsTemplate } from '../template/related-search'
 import { urlParameterMap } from '../utils/urlParameter'
 import { API_URL } from '../utils/constants'
+import {noResultsTemplate} from '../template/no-results';
 
 export class SearchModule {
   private spinnerEl: HTMLInputElement | null
@@ -40,12 +41,16 @@ export class SearchModule {
      * */
   processData () {
     this.fetchData().then(data => {
-      const { contextualNavigation } = data.response.resultPacket;
-
-      this.spinnerEl?.setAttribute('hidden', '')
-      render(mainTemplate(data?.response, this.urlParameter), document.getElementById('qg-search-results__container') as HTMLBodyElement)
-      if(contextualNavigation){
-        render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags') as HTMLBodyElement)
+      const { contextualNavigation, results } = data.response.resultPacket;
+      if(results.length > 0){
+        this.spinnerEl?.setAttribute('hidden', '')
+        render(mainTemplate(data?.response, this.urlParameter), document.getElementById('qg-search-results__container')!)
+        if(contextualNavigation){
+          render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags')!)
+        }
+      } else {
+        document.querySelector('.qg-search-results__spinner')!.remove();
+        render(noResultsTemplate(), document.getElementById('qg-search-results__container')!)
       }
     })
   }
