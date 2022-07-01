@@ -34,7 +34,7 @@ export function paginationTemplate (response: Response, paramMap: ParamMap) {
   const onPageClick = (e: any) => {
     e.preventDefault()
     clearTimeout(timer)
-    document.getElementById('qg-search-results')?.scrollIntoView({
+    document.querySelector('.qg-site-search__component')?.scrollIntoView({
       behavior: 'smooth'
     })
     if (e.target?.href) {
