@@ -4,6 +4,7 @@ import { relatedResultsTemplate } from '../template/related-search'
 import { urlParameterMap } from '../utils/urlParameter'
 import { API_URL } from '../utils/constants'
 import {noResultsTemplate} from '../template/no-results';
+import {searchForm} from '../template/search-form';
 
 export class SearchModule {
   private spinnerEl: HTMLInputElement | null
@@ -15,8 +16,12 @@ export class SearchModule {
     this.spinnerEl = document.querySelector('.qg-search-results__spinner')
     this.siteInput = document.querySelector('.qg-site-search__component .qg-search-site__input')
 
+    // render search form
+    this.renderSearchForm()
+
     // check if query porameter is set to start fetch process
     const queryParam = this.urlParameter.query
+
     if (queryParam) {
       this.processData()
       if (this.siteInput) {
@@ -33,6 +38,10 @@ export class SearchModule {
     this.spinnerEl?.removeAttribute('hidden')
     const response = await fetch(`${API_URL}?query=${this.urlParameter.query}&num_ranks=${this.urlParameter.numRanks}&tiers=off&collection=${this.urlParameter.collection}&profile=${this.urlParameter.profile}&scope=${this.urlParameter.scope}&start_rank=${this.urlParameter.startRank}`)
     return await response.json()
+  }
+
+  renderSearchForm() {
+    render(searchForm(), document.getElementById('qg-search-form')!)
   }
 
   /**
