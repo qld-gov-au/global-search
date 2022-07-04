@@ -118,5 +118,5 @@ export function searchForm () {
                     </div>
                     <!--parameters to display results on search page-->
                 </form>
-        <p class="mt-3">Enter your query terms in the box above to search.</p>`
+        <p class="mt-3">Enter your query in the box above to search.</p>`
 }
