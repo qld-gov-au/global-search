@@ -3,8 +3,8 @@ import { mainTemplate } from '../template/main'
 import { relatedResultsTemplate } from '../template/related-search'
 import { urlParameterMap } from '../utils/urlParameter'
 import { API_URL } from '../utils/constants'
-import {noResultsTemplate} from '../template/no-results';
-import {searchForm} from '../template/search-form';
+import { noResultsTemplate } from '../template/no-results'
+import { searchForm } from '../template/search-form'
 
 export class SearchModule {
   private spinnerEl: HTMLInputElement | null
@@ -40,7 +40,7 @@ export class SearchModule {
     return await response.json()
   }
 
-  renderSearchForm() {
+  renderSearchForm () {
     render(searchForm(), document.getElementById('qg-search-form')!)
   }
 
@@ -50,15 +50,15 @@ export class SearchModule {
      * */
   processData () {
     this.fetchData().then(data => {
-      const { contextualNavigation, results } = data?.response?.resultPacket;
-      if(results.length > 0){
+      const { contextualNavigation, results } = data?.response?.resultPacket
+      if (results.length > 0) {
         this.spinnerEl?.setAttribute('hidden', '')
         render(mainTemplate(data?.response, this.urlParameter), document.getElementById('qg-search-results__container')!)
-        if(contextualNavigation){
+        if (contextualNavigation) {
           render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags')!)
         }
       } else {
-        document.querySelector('.qg-search-results__spinner')!.remove();
+        document.querySelector('.qg-search-results__spinner')!.remove()
         render(noResultsTemplate(), document.getElementById('qg-search-results__container')!)
       }
     })

@@ -1,51 +1,68 @@
-import {html, render} from 'lit-html'
-import {fetchData} from '../utils/fetchData';
-import {mainTemplate} from './main';
-import {urlParameterMap} from '../utils/urlParameter';
-import {relatedResultsTemplate} from './related-search';
-import {noResultsTemplate} from './no-results';
+import { html, render } from 'lit-html'
+import { fetchData } from '../utils/fetchData'
+import { mainTemplate } from './main'
+import { urlParameterMap } from '../utils/urlParameter'
+import { relatedResultsTemplate } from './related-search'
+import { noResultsTemplate } from './no-results'
 
 export function searchForm () {
+  const currUrlParameterMap = urlParameterMap()
+
+  const onSubmit = (e: any) => {
+    e.preventDefault()
+    const params = new URLSearchParams(location.search)
     const currUrlParameterMap = urlParameterMap()
 
-    const onSubmit = (e: any) => {
-        e.preventDefault();
-        const params = new URLSearchParams(location.search)
-        const currUrlParameterMap = urlParameterMap()
+    // set params
+    params.set('scope', currUrlParameterMap.scope)
+    params.set('profile', currUrlParameterMap.profile)
+    params.set('page', '1')
+    params.set('start_rank', '1')
+    params.set('num_ranks', '10')
+    params.set('tiers', 'off')
+    params.set('collection', 'qld-gov')
 
-        // set params
-        params.set('scope', currUrlParameterMap.scope)
-        params.set('profile', currUrlParameterMap.profile)
-        params.set('page', '1')
-        params.set('start_rank', '1')
-        params.set('num_ranks', '10')
-        params.set('tiers', 'off')
-        params.set('collection', 'qld-gov')
+    // push history stack and fetch data
+    setTimeout(function () {
+      const currInputValue = (document.querySelector('.qg-site-search__component .qg-search-site__input') as HTMLInputElement).value
+      params.set('query', currInputValue)
+      history.pushState({}, '', `?${params.toString()}`)
+      fetchData(params.toString()).then(data => {
+        const { contextualNavigation, results } = data?.response?.resultPacket
+        if (results?.length) {
+          render(mainTemplate(data?.response, currUrlParameterMap), document.getElementById('qg-search-results__container') as HTMLBodyElement)
+          render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags')!)
+        } else {
+          render(noResultsTemplate(), document.getElementById('qg-search-results__container')!)
+          // TODO - include related search in the main template
+          render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags')!)
+        }
+      })
+    })
+  }
 
-        // push history stack and fetch data
-        setTimeout(function(){
-            const currInputValue = (document.querySelector('.qg-site-search__component .qg-search-site__input')  as HTMLInputElement).value;
-            params.set('query', currInputValue)
-            history.pushState({}, '', `?${params.toString()}`)
-            fetchData(params.toString()).then(data => {
-                const { contextualNavigation, results } = data?.response?.resultPacket;
-                if(results?.length) {
-                    render(mainTemplate(data?.response, currUrlParameterMap), document.getElementById('qg-search-results__container') as HTMLBodyElement)
-                    render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags')!)
-                } else {
-                    render(noResultsTemplate(), document.getElementById('qg-search-results__container')!)
-                    // TODO - include related search in the main template
-                    render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags')!)
-                }
-            })
-        });
+  const suggestionVisibility = (value: boolean) => {
+    const suggestionEl = document.querySelector('.qg-site-search__component .qg-search-concierge-help') as HTMLElement
+    if (suggestionEl != null) {
+      suggestionEl.hidden = value
     }
+  }
 
-    return html`
+  const onInputClick = (e: { type: string; key: string }) => {
+    if (e.type === 'keydown') {
+      if (e.key === 'Enter') {
+        suggestionVisibility(true)
+      } else {
+        suggestionVisibility(false)
+      }
+    }
+  }
+
+  return html`
         <form action="#" role="search" class="qg-site-search__form qg-site-search__component qg-search-form" data-suggestions="https://find.search.qld.gov.au/s/suggest.json?collection=qld-gov&fmt=json%2B%2B&alpha=0.5&profile=qld" data-results-url="https://find.search.qld.gov.au/s/search.json?collection=qld-gov&profile=qld&meta_sfinder_sand=yes">
                     <div class="input-group">
                         <label for="qg-search-query-sm" class="qg-visually-hidden">Search Queensland Government</label>
-                        <input type="text" name="query" id="qg-search-query-sm"  class="form-control qg-search-site__input" autocomplete="off" placeholder="Search website" tabindex="0" aria-required="true" aria-expanded="false" value="${currUrlParameterMap.query}"/>
+                        <input type="text" name="query" id="qg-search-query-sm"  class="form-control qg-search-site__input" autocomplete="off" placeholder="Search website" tabindex="0" aria-required="true" aria-expanded="false" value="${currUrlParameterMap.query}" @keydown="${onInputClick}" @click="${onInputClick}"/>
                         <svg class="qg-search__icon d-none d-md-block d-lg-block" width="512px" height="512px" viewBox="0 0 512 512">
                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                 <g transform="translate(67.298684, 71.201316)">
