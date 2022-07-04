@@ -3,6 +3,7 @@ import {fetchData} from '../utils/fetchData';
 import {mainTemplate} from './main';
 import {urlParameterMap} from '../utils/urlParameter';
 import {relatedResultsTemplate} from './related-search';
+import {noResultsTemplate} from './no-results';
 
 export function searchForm () {
     const currUrlParameterMap = urlParameterMap()
@@ -28,8 +29,12 @@ export function searchForm () {
             history.pushState({}, '', `?${params.toString()}`)
             fetchData(params.toString()).then(data => {
                 const { contextualNavigation, results } = data?.response?.resultPacket;
-                render(mainTemplate(data?.response, currUrlParameterMap), document.getElementById('qg-search-results__container') as HTMLBodyElement)
-                render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags')!)
+                if(results?.length) {
+                    render(mainTemplate(data?.response, currUrlParameterMap), document.getElementById('qg-search-results__container') as HTMLBodyElement)
+                    render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags')!)
+                } else {
+                    render(noResultsTemplate(), document.getElementById('qg-search-results__container')!)
+                }
             })
         });
     }
