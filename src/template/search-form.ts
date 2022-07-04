@@ -34,6 +34,8 @@ export function searchForm () {
                     render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags')!)
                 } else {
                     render(noResultsTemplate(), document.getElementById('qg-search-results__container')!)
+                    // TODO - include related search in the main template
+                    render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags')!)
                 }
             })
         });
