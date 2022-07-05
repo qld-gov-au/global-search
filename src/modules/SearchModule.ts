@@ -3,6 +3,8 @@ import { mainTemplate } from '../template/main'
 import { relatedResultsTemplate } from '../template/related-search'
 import { urlParameterMap } from '../utils/urlParameter'
 import { API_URL } from '../utils/constants'
+import { noResultsTemplate } from '../template/no-results'
+import { searchForm } from '../template/search-form'
 
 export class SearchModule {
   private spinnerEl: HTMLInputElement | null
@@ -14,8 +16,12 @@ export class SearchModule {
     this.spinnerEl = document.querySelector('.qg-search-results__spinner')
     this.siteInput = document.querySelector('.qg-site-search__component .qg-search-site__input')
 
+    // render search form
+    this.renderSearchForm()
+
     // check if query porameter is set to start fetch process
     const queryParam = this.urlParameter.query
+
     if (queryParam) {
       this.processData()
       if (this.siteInput) {
@@ -34,15 +40,27 @@ export class SearchModule {
     return await response.json()
   }
 
+  renderSearchForm () {
+    render(searchForm(), document.getElementById('qg-search-form')!)
+  }
+
   /**
      * processData function process the results fetched and render templates
      * @return {undefined}
      * */
   processData () {
     this.fetchData().then(data => {
-      this.spinnerEl?.setAttribute('hidden', '')
-      render(mainTemplate(data?.response, this.urlParameter), document.getElementById('qg-search-results__container') as HTMLBodyElement)
-      render(relatedResultsTemplate(data?.response?.resultPacket?.contextualNavigation), document.getElementById('related-search__tags') as HTMLBodyElement)
+      const { contextualNavigation, results } = data?.response?.resultPacket
+      if (results.length > 0) {
+        this.spinnerEl?.setAttribute('hidden', '')
+        render(mainTemplate(data?.response, this.urlParameter), document.getElementById('qg-search-results__container')!)
+        if (contextualNavigation) {
+          render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags')!)
+        }
+      } else {
+        document.querySelector('.qg-search-results__spinner')!.remove()
+        render(noResultsTemplate('No results found'), document.getElementById('qg-search-results__container')!)
+      }
     })
   }
 }
