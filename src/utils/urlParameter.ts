@@ -1,5 +1,6 @@
 export const urlParameterMap = () => {
-  const urlParams = new URLSearchParams(window.location.search)
+  const url = new URL(window.location.href)
+  const urlParams = new URLSearchParams(url.search)
   return {
     query: urlParams.get('query') || '',
     profile: urlParams.get('profile') || '',
