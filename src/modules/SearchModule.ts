@@ -59,7 +59,7 @@ export class SearchModule {
         }
       } else {
         document.querySelector('.qg-search-results__spinner')!.remove()
-        render(noResultsTemplate(), document.getElementById('qg-search-results__container')!)
+        render(noResultsTemplate('No results found'), document.getElementById('qg-search-results__container')!)
       }
     })
   }

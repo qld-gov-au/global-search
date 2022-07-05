@@ -10,35 +10,40 @@ export function searchForm () {
 
   const onSubmit = (e: any) => {
     e.preventDefault()
-    const params = new URLSearchParams(location.search)
-    const currUrlParameterMap = urlParameterMap()
+    const inputValue = (document.querySelector('.qg-site-search__component .qg-search-site__input') as HTMLInputElement).value
+    if (inputValue) {
+      const params = new URLSearchParams(location.search)
+      const currUrlParameterMap = urlParameterMap()
 
-    // set params
-    params.set('scope', currUrlParameterMap.scope)
-    params.set('profile', currUrlParameterMap.profile)
-    params.set('page', '1')
-    params.set('start_rank', '1')
-    params.set('num_ranks', '10')
-    params.set('tiers', 'off')
-    params.set('collection', 'qld-gov')
+      // set params
+      params.set('scope', currUrlParameterMap.scope)
+      params.set('profile', currUrlParameterMap.profile)
+      params.set('page', '1')
+      params.set('start_rank', '1')
+      params.set('num_ranks', '10')
+      params.set('tiers', 'off')
+      params.set('collection', 'qld-gov')
 
-    // push history stack and fetch data
-    setTimeout(function () {
-      const currInputValue = (document.querySelector('.qg-site-search__component .qg-search-site__input') as HTMLInputElement).value
-      params.set('query', currInputValue)
-      history.pushState({}, '', `?${params.toString()}`)
-      fetchData(params.toString()).then(data => {
-        const { contextualNavigation, results } = data?.response?.resultPacket
-        if (results?.length) {
-          render(mainTemplate(data?.response, currUrlParameterMap), document.getElementById('qg-search-results__container') as HTMLBodyElement)
-          render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags')!)
-        } else {
-          render(noResultsTemplate(), document.getElementById('qg-search-results__container')!)
-          // TODO - include related search in the main template
-          render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags')!)
-        }
+      // push history stack and fetch data
+      setTimeout(function () {
+        const currInputValue = (document.querySelector('.qg-site-search__component .qg-search-site__input') as HTMLInputElement).value
+        params.set('query', currInputValue)
+        history.pushState({}, '', `?${params.toString()}`)
+        fetchData(params.toString()).then(data => {
+          const { contextualNavigation, results } = data?.response?.resultPacket
+          if (results?.length) {
+            render(mainTemplate(data?.response, currUrlParameterMap), document.getElementById('qg-search-results__container') as HTMLBodyElement)
+            render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags')!)
+          } else {
+            render(noResultsTemplate('No results found'), document.getElementById('qg-search-results__container')!)
+            render('', document.getElementById('related-search__tags')!)
+          }
+        })
       })
-    })
+    } else {
+      render('', document.getElementById('qg-search-results__container')!)
+      render('', document.getElementById('related-search__tags')!)
+    }
   }
 
   const suggestionVisibility = (value: boolean) => {
