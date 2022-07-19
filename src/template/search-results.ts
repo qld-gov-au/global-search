@@ -18,8 +18,7 @@ export function searchResultsTemplate(resultPacket: { query: string; resultsSumm
                     <ul class="qg-search-results__results-list">
                         <li class="description"> ${result.metaData.C}</li>
                         <li class="meta"><span class="qg-search-results__url">${result.indexUrl}</span> - <span
-                                class="file-size">${formatSize(result.fileSize)}</span> - <span
-                                class="date-updated">${formatDate(result.date)}</span></li>
+                                class="file-size">${formatSize(result.fileSize)}</span> ${result.date ? html`<span>&nbsp;-&nbsp;${formatDate(result.date)}</span>` : ''}</li>
                     </ul>
                 </li>`
             )}
