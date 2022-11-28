@@ -10,7 +10,9 @@ export function mainTemplate (response: Response, paramMap: ParamMap) {
   const { exhibits } = curator
 
   return html`
+    <!-- Exhibits: ${exhibits} -->
         ${exhibits.length > 0 ? featuredResultsTemplate(exhibits) : ''}
+    <!-- Result packet: ${resultPacket} -->
         ${searchResultsTemplate(resultPacket)}
         ${paginationTemplate(response, paramMap)}
     `
