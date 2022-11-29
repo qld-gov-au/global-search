@@ -10,12 +10,10 @@ export function featuredResultsTemplate (exhibits: any[]) {
                                 <h2 class="qg-card__title">
                                     <a href="https://find.search.qld.gov.au${item.linkUrl}" class="stretched-link">${item.titleHtml}</a>
                                 </h2>
-                                <ul class="qg-search-results__results-list">
-                                    <li class="description">${item.descriptionHtml}</li>
-                                    <li class="meta">
-                                        <span class="qg-search-results__url">${item.displayUrl}</span>
-                                    </li>
-                                </ul>
+                                <div class="qg-search-results__results-list">
+                                    <p class="description">${item.descriptionHtml}</p>
+                                    <p class="qg-search-results__url">${item.displayUrl}</p>
+                                </div>
                             </div>
                         </div>
                     </article>`
