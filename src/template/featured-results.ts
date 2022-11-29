@@ -4,6 +4,7 @@ export function featuredResultsTemplate (exhibits: any[]) {
   return html`<h2 class="search-results-summary">Featured results</h2>
     ${exhibits.map((item, index) => {
                 return html`
+                <!-- Exhibit item: ${item} -->
                     <article class="qg-card qg-card__light-theme qg-card__clickable">
                         <div class="content">
                             <div class="details">
