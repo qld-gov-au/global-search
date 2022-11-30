@@ -13,18 +13,6 @@
 #qg-content #qg-secondary-content .qg-aside h2 {
     display: none;
 }
-.qg-card__clickable .content:after {
-    bottom: 1.3rem;
-    position: absolute;
-    right: 1rem;
-    color: #212529;
-    font-size: 1.2rem;
-    content: "\f061";
-    font-family: FontAwesome;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
 .qg-filter-by-results {
     margin-bottom: 2rem;
 }
