@@ -42,7 +42,7 @@ export function filterResultsTemplate () {
     label = capitalizeFirstLetter(labelFromSession)
   } else if (scopeFromSession) {
     // @ts-ignore
-    label = html`Results from <strong>${scopeFromSession}</strong>`
+    label = html`Results from<strong>&nbsp;${scopeFromSession}</strong>`
   } else if (profileFromSession) {
     label = capitalizeFirstLetter(profileFromSession)
   }
