@@ -1,3 +1,5 @@
+import { search_url } from '../utils/constants'
+import { search_collection } from '../utils/constants'
 import { html, render } from 'lit-html'
 import { fetchData } from '../utils/fetchData'
 import { mainTemplate } from './main'
@@ -22,7 +24,7 @@ export function searchForm () {
       params.set('start_rank', '1')
       params.set('num_ranks', '10')
       params.set('tiers', 'off')
-      params.set('collection', 'qld-gov')
+      params.set('collection', 'qgov~sp-qld')
 
       // push history stack and fetch data
       setTimeout(function () {
@@ -64,7 +66,7 @@ export function searchForm () {
   }
 
   return html`
-        <form action="#" role="search" class="qg-site-search__form qg-site-search__component qg-search-form qg-site-search__multiple-forms" data-suggestions="https://find.search.qld.gov.au/s/suggest.json?collection=qld-gov&fmt=json%2B%2B&alpha=0.5&profile=qld" data-results-url="https://find.search.qld.gov.au/s/search.json?collection=qld-gov&profile=qld&smeta_sfinder_sand=yes">
+        <form action="#" role="search" class="qg-site-search__form qg-site-search__component qg-search-form qg-site-search__multiple-forms" data-suggestions="${search_url}/s/suggest.json?collection=${search_collection}&fmt=json%2B%2B&alpha=0.5&profile=qld" data-results-url="${search_url}/s/search.json?collection=${search_collection}&profile=qld&smeta_sfinder_sand=yes">
                     <div class="input-group">
                         <label for="qg-search-query-sm" class="qg-visually-hidden">Search Queensland Government</label>
                         <input type="text" name="query" id="qg-search-query-sm"  class="form-control qg-search-site__input" autocomplete="off" placeholder="Search website" tabindex="0" aria-required="true" aria-expanded="false" value="${currUrlParameterMap.query}" @keydown="${onInputClick}" @click="${onInputClick}"/>
