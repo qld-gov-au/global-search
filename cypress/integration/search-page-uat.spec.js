@@ -1,5 +1,5 @@
 const ROOT_URL = 'http://localhost:1234'
-import { search_collection } from '../utils/constants'
+import { search_collection } from '../src/utils/constants'
 
 const wt = 500;
 function formatString(text) {
