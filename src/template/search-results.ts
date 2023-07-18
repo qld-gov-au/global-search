@@ -1,3 +1,4 @@
+import { search_url } from '../utils/constants'
 import { html } from 'lit-html'
 import { formatNumber, formatSize, formatDate } from '../utils/formatContent'
 
@@ -13,7 +14,7 @@ export function searchResultsTemplate(resultPacket: { query: string; resultsSumm
             ${resultPacket.results.map((result: any) => html`
                 <li class="qg-search-results__results-list-item">
                     <h3>
-                        <a href="https://find.search.qld.gov.au${result.clickTrackingUrl}">${customizeTitle(result.title)}</a>
+                        <a href="${search_url}${result.clickTrackingUrl}">${customizeTitle(result.title)}</a>
                     </h3>
                     <ul class="qg-search-results__results-list">
                         <li class="description"> ${result.metaData.C}</li>
