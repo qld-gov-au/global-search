@@ -24,7 +24,7 @@ export function searchForm () {
       params.set('start_rank', '1')
       params.set('num_ranks', '10')
       params.set('tiers', 'off')
-      params.set('collection', 'qgov~sp-content')
+      params.set('collection', 'qgov~sp-search')
 
       // push history stack and fetch data
       setTimeout(function () {
