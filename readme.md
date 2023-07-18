@@ -19,3 +19,6 @@ https://parceljs.org/
 
 Typescript
 https://www.typescriptlang.org/
+
+## Run locally
+Install Lit and Parcel JS. Then run `npm run build` to launch the global search on http://localhost:1234.
