@@ -11,7 +11,7 @@ export const urlParameterMap = () => {
     filter: rSpe(urlParams.get('filter')) || '',
     numRanks: parseInt(urlParams.get('num_ranks') as string) || 0,
     startRank: parseInt(urlParams.get('start_rank') as string) || 1,
-    collection: rSpe(urlParams.get('collection')) || '',
+    collection: (urlParams.get('collection') || '').replace(/\%7E/g, '~'),
     scope: rSpe(urlParams.get('scope')) || '',
     activePage: parseInt(urlParams.get('page') as string) || 1
   }
