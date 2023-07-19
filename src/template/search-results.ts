@@ -17,7 +17,7 @@ export function searchResultsTemplate(resultPacket: { query: string; resultsSumm
                         <a href="${search_url}${result.clickTrackingUrl}">${customizeTitle(result.title)}</a>
                     </h3>
                     <ul class="qg-search-results__results-list">
-                        <li class="description">${Array.isArray(result.listMetadata.c) ? result.listMetadata.c[0] : result.summary}</li>
+                        <li class="description">${Array.isArray(result.listMetadata.c) ? result.listMetadata.c[0] : ''}</li>
                         <li class="meta">
                             <span class="qg-search-results__url">${result.indexUrl}</span>
                             ${result.fileSize ? html`<span>&nbsp;-&nbsp;${formatSize(result.fileSize)}</span>` : ''}
