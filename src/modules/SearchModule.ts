@@ -51,7 +51,7 @@ export class SearchModule {
   processData () {
     this.fetchData().then(data => {
       const contextualNavigation = data?.response?.resultPacket?.contextualNavigation
-      const totalMatching = data?.response?.resultPacket.resultsSummary?.totalMatching
+      const totalMatching = data?.response?.resultPacket?.resultsSummary?.totalMatching
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
       if (totalMatching > 0) {
         this.spinnerEl?.setAttribute('hidden', '')
