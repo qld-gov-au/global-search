@@ -36,7 +36,7 @@ export function relatedResultsTemplate (contextualNavigation: { categories: any;
       if (element?.name === 'topic') {
         return html` <p class="related-search__title">Related search</p>
         <section class="related-search__tags">
-            ${categories[0]?.clusters.map((item: any) =>
+            ${element?.clusters.map((item: any) =>
               html`<a @click="${(e: RelatedSearchClick) => onRelatedSearchClick(e)}" href="${item.href}&start_rank=1" class="qg-btn btn-outline-dark m-1">${item.query}</a>`
           )}
         </section>`
