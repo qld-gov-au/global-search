@@ -32,15 +32,15 @@ export function relatedResultsTemplate (contextualNavigation: { categories: any;
 
   if (contextualNavigation) {
     const { categories } = contextualNavigation
-    categories?.forEach((element: any) => {
-      if (element?.name === 'topic') {
+    for (let i = 0; i < categories.length; i++) {
+      if (categories[i]?.name === 'topic') {
         return html` <p class="related-search__title">Related search</p>
         <section class="related-search__tags">
-            ${element?.clusters.map((item: any) =>
+            ${categories[i]?.clusters.map((item: any) =>
               html`<a @click="${(e: RelatedSearchClick) => onRelatedSearchClick(e)}" href="${item.href}&start_rank=1" class="qg-btn btn-outline-dark m-1">${item.query}</a>`
           )}
         </section>`
       }
-    });
+    }
   }
 }
