@@ -32,7 +32,7 @@ export function relatedResultsTemplate (contextualNavigation: { categories: any;
 
   if (contextualNavigation) {
     const { categories } = contextualNavigation
-    categories.array.forEach((element: any) => {
+    categories?.forEach((element: any) => {
       if (element?.name === 'topic') {
         return html` <p class="related-search__title">Related search</p>
         <section class="related-search__tags">
