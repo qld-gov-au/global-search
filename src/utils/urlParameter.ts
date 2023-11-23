@@ -5,7 +5,7 @@ export const urlParameterMap = () => {
     return str?.replace(/[\\#+()$~%*?<>{}]/g, '')
   }
   return {
-    query: rSpe((urlParams.get('query') || '').replace(/\%2F/g, '/')),
+    query: rSpe((urlParams.get('query') || '').replace(/\%2F/g, '/').replace(/\%60/g, "")),
     profile: rSpe(urlParams.get('profile') || ''),
     label: rSpe(urlParams.get('label') || ''),
     filter: rSpe(urlParams.get('filter') || ''),
