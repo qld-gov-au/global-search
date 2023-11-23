@@ -8,6 +8,8 @@ import { ParamMap } from '../types/url-parameters'
 export function mainTemplate (response: Response, paramMap: ParamMap) {
   const { resultPacket, curator } = response
   const { exhibits } = curator
+  
+  console.log(resultPacket);
 
   return html`
         ${exhibits.length > 0 ? featuredResultsTemplate(exhibits) : ''}
