@@ -34,8 +34,7 @@ export function relatedResultsTemplate (contextualNavigation: { categories: any;
     const { categories } = contextualNavigation
     for (let i = 0; i < categories.length; i++) {
       if (categories[i]?.name === 'topic') {
-        return html` <p class="related-search__title">Related search</p>
-        <section class="related-search__tags">
+        return html` <section class="related-search__tags">
             ${categories[i]?.clusters.map((item: any) =>
               html`<a @click="${(e: RelatedSearchClick) => onRelatedSearchClick(e)}" href="${item.href}&start_rank=1" class="qg-btn btn-outline-dark m-1">${item.query}</a>`
           )}
