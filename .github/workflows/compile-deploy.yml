@@ -43,11 +43,8 @@ jobs:
         shell: bash
         run: echo "${{ steps.extract_branch.outputs.branch }}"
 
-      - name: Publish to global-search-release
+      - name: Publish to the release repository
         uses: qld-gov-au/gha-publish-to-git@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          GITHUB_PAT: ${{ secrets.GH_PAT }}
         with:
           repository: ${{ vars.TARGET_REPO }}
           git_ref: '${{ github.ref }}'
