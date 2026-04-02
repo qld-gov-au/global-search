@@ -7,7 +7,8 @@
   ],
   "scripts": {
     "start": "parcel --no-cache",
-    "build": "npm run clean:output && parcel build src/app.css src/app.ts",
+    "build:css": "sass src/styles/app.scss dist/app.css --style=compressed",
+    "build": "npm run clean:output && npm run build:css && parcel build src/app.ts",
     "test:e2e": "cypress open",
     "clean:output": "rimraf dist"
   },
@@ -21,7 +22,8 @@
     "eslint-plugin-n": "^15.2.1",
     "eslint-plugin-promise": "^6.0.0",
     "parcel": "^2.6.0",
-    "posthtml-include": "^1.7.4"
+    "posthtml-include": "^1.7.4",
+    "sass": "^1.98.0"
   },
   "overrides": {
     "minimatch": "3.1.3"
