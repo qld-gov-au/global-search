@@ -1,8 +1,29 @@
 import { html } from 'lit-html'
+import { unsafeHTML } from 'lit-html/directives/unsafe-html'
+import { urlParameterMap } from '../utils/urlParameter';
+import { DEFAULT_SEARCH_COLLECTION, DEFAULT_SEARCH_PROFILE, DEFAULT_SEARCH_NUMRANKS } from '../utils/constants';
 
-export function noResultsTemplate (message : string) {
-  return html`
-        <div class="alert alert-warning" role="alert">
-            <h2><i class="fa fa-exclamation-triangle"></i>${message}</h2>
-        </div>`
+export function noResultsTemplate (keyword: string = '', message : string = '', spellText: string = '') {
+  if (!message && message === '') {
+    message = `<div class="qld-search-results__error-hint">No search results were found ${keyword ? `for <strong>${keyword}</strong>` : ''}. Please search again using a different search term.</div>`
+  }
+
+  // Insert spell check suggestion at the beginning of the message
+  if (spellText) {
+    const currUrlParameterMap = urlParameterMap();
+
+    const params = new URLSearchParams({
+        query: spellText,
+        collection: currUrlParameterMap.collection || DEFAULT_SEARCH_COLLECTION,
+        profile: currUrlParameterMap.profile || DEFAULT_SEARCH_PROFILE,
+        scope: currUrlParameterMap.scope ?? '',
+        num_ranks: DEFAULT_SEARCH_NUMRANKS,
+        tiers: 'off',
+        start_rank: String(currUrlParameterMap.startRank ?? '')
+      })
+    const spellTextLink = `<a href="?${params.toString()}"><span class="funnelback-highlight">${spellText}</span></a>`;
+    message = `<p>Did you mean: ${spellTextLink}? </p> ${message}`
+  }
+
+  return html`${unsafeHTML(message)}`
 }
