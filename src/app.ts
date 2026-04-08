@@ -1,4 +1,3 @@
-
 import { FilterModule } from './modules/FilterModule'
 import { SearchModule } from './modules/SearchModule'
 
@@ -14,4 +13,3 @@ window.onpopstate = function(event) {
 };
 // initalize on page reload
 initApp.init();
-

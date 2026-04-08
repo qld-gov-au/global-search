@@ -13,19 +13,19 @@
 #qg-content #qg-secondary-content .qg-aside h2 {
     display: none;
 }
-.qg-filter-by-results {
+.qld-filter-by-results {
     margin-bottom: 2rem;
 }
-.qg-filter-by-results .qg-filter-by-results__form label, .qg-filter-by-results .qg-btn__filter, .qg-filter-by-results .qg-filter-by-results__form .label {
+.qld-filter-by-results .qg-filter-by-results__form label, .qld-filter-by-results .qg-btn__filter, .qld-filter-by-results .qg-filter-by-results__form .label {
     font-size: 0.8rem;
 }
-.qg-filter-by-results .qg-btn__filter {
+.qld-filter-by-results .qg-btn__filter {
     margin-right: 2em;
 }
-.qg-filter-by-results .qg-filter-by-results__form .label {
+.qld-filter-by-results .qg-filter-by-results__form .label {
     font-weight: normal;
 }
-.qg-filter-by-results .qg-filter-by-results__title {
+.qld-filter-by-results .qg-filter-by-results__title {
     font-weight: 700;
     border-bottom: 2px solid #000;
     padding-bottom: 0.8em;
@@ -43,17 +43,121 @@
     line-height: inherit;
 }
 
-
 @media (max-width: 991.98px) {
     .qg-breadcrumb-list-item {
         display: inherit;
     }
 }
 
-.related-search__container .related-search__tags {
-    border-top: 2px solid #000;
-    font-weight: 700;
-    margin-top: 1.2em;
-    padding-top: 1.2em;
-    padding-left: 1em;
+#qld-search-results__container {
+    .qld-search-hint {
+        display: none;
+    }
+
+    &:has(> :only-child) .qld-search-hint {
+        display: block;
+    }
+
+    .qld-search-results__error-hint {
+        margin-block: 1rem;
+    }
+}
+
+#qld-related-search__container {
+    .related-tags {
+        .tag-list {
+            padding: 0;
+        }
+    }
+}
+
+.pagination {
+    .page-item .page-link {
+        padding: 0 0.625rem;
+        width: auto;
+        min-width: 2rem;
+    }
+    .page-item.previous .page-link {
+        padding-left: 0;
+    }
+    .page-item.next .page-link {
+        padding-right: 0;
+    }
+    
+    // Remove hover state (bg color) from the pagination ellipsis, since it is not a clickable element.
+    .page-item.more span:hover:before {
+        background-color: var(--action-icon-more-color);
+    }
+    
+    .page-item.more.mobile-only-ellipsis {
+        display: none;
+    }
+
+    // Pagination rules according to the Design System
+    @media (max-width: 400px) {
+        // Show ellipsis on mobile
+        .page-item.more { 
+            display: list-item; 
+        }
+
+        .page-item.more.mobile-only-ellipsis {
+            display: list-item;
+        }
+        
+        // Hide Previous/Next span text on medium screen and smaller.
+        .page-item.previous .page-link span,
+        .page-item.next .page-link span {
+            display: none;
+        }
+        
+        // Show Previous/Next arrow
+        .page-item.previous,
+        .page-item.next {
+            display: list-item;
+        }
+        
+        // Hide all page numbers by default
+        .page-item { display: none; }
+        
+        // Show "First, Last, Active" page number
+        .page-item.first-page,
+        .page-item.last-page,
+        .page-item.active {
+            display: list-item;
+        }
+        
+        
+        // First page is active
+        // -- Show 2, 3,  and last
+        &.active-is-first .page-item.second-page,
+        &.active-is-first .page-item.third-page {
+            display: list-item;
+        }
+        
+        // Last page is active
+        // Show = last-2, last-1, and last
+        &.active-is-last .page-item.one-before-last,
+        &.active-is-last .page-item.two-before-last{
+            display: list-item;
+        }
+        
+        
+        //----- Before / After Active -----
+
+        // Always hide before and after active
+        .page-item.before-active,
+        .page-item.after-active {
+            display: none;
+        }
+    
+        // Only show before and after active when second and second-to-last page is active.
+        &.active-is-second .page-item.before-active,
+        &.active-is-second .page-item.after-active,
+        &.active-is-second-to-last .page-item.before-active,
+        &.active-is-second-to-last .page-item.after-active {
+            display: list-item;
+        }
+        // End of: Before / After Active -----
+    }
+    
 }

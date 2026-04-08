@@ -1,3 +1,11 @@
-export const API_URL = 'https://discover.search.qld.gov.au/s/search.json'
-export const search_url = 'https://discover.search.qld.gov.au'
-export const search_collection = 'qgov~sp-search'
+export const SEARCH_BASE_URL = 'https://search.qld.gov.au'
+export const SEARCH_API_URL = `${SEARCH_BASE_URL}/s/search.json`
+export const SEARCH_SUGGESTIONS_URL = `${SEARCH_BASE_URL}/s/suggest.json`
+export const DEFAULT_SEARCH_COLLECTION = 'ssqld~sp-search';
+export const DEFAULT_SEARCH_PROFILE = 'qld';
+export const DEFAULT_SEARCH_NUMRANKS = '10';
+export const SEARCH_INPUT_ID = 'search-input-inpage';
+export const SEARCH_SUBMIT_ID = 'search-button-inpage';
+export const SEARCH_FORM_CONTAINER_ID = 'qld-search-form__container';
+export const SEARCH_RESULTS_CONTAINER_ID = 'qld-search-results__container';
+export const RELATED_SEARCH_CONTAINER_ID = 'qld-related-search__container';

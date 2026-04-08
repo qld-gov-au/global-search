@@ -35,7 +35,7 @@ export class FilterModule {
   filterResultsTemplate () {
     const profile = this.urlParameter.profile
     if ((this.urlParameter.filter) || (profile && profile !== 'qld') || (this.urlParameter.scope)) {
-      render(filterResultsTemplate(), document.getElementById('qg-filter-by-results') as HTMLBodyElement)
+      render(filterResultsTemplate(), document.getElementById('qld-filter-by-results') as HTMLBodyElement)
     }
   }
 }

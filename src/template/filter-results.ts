@@ -22,7 +22,7 @@ export function filterResultsTemplate () {
     params.set('start_rank', '1')
     history.pushState({}, '', `?${params.toString()}`)
     fetchData(params.toString()).then(data => {
-      render(mainTemplate(data?.response, currUrlParameterMap), document.getElementById('qg-search-results__container') as HTMLBodyElement)
+      render(mainTemplate(data?.response, currUrlParameterMap), document.getElementById('qld-search-results__container') as HTMLBodyElement)
     })
   }
 
@@ -49,37 +49,31 @@ export function filterResultsTemplate () {
 
   // loading of the component
   window.addEventListener('load', (event) => {
-    const filterButton = document.querySelector('.qg-btn__filter')
+    const filterButton = document.querySelector('.qld-btn__search-filter')
     filterButton?.addEventListener('click', e => {})
     filterButton?.dispatchEvent(new Event('click'))
   })
 
-  return html`<div class="qg-filter-by-results">
-              <p class="qg-filter-by-results__title">Filter results by</p>
+  return html`<div class="qld-filter-by-results">
+              <h2 class="h4 mt-0 pb-2 border-bottom">Filter results by</h2>
               <form class="form qg-forms-v2 qg-filter-by-results__form">
-              <ol class="questions pt-2">
-                <li>
-                  <fieldset>
-                    <legend>
-                      <span class="label">Content type</span>
-                    </legend>
-                    <ol class="choices qg-forms-v2__radio">
-                      <li>
-                        <input checked name="filterBy" id="customOption" type="radio" value="custom"
-                               data-scope="${scopeFromSession}" 
-                               data-profile="${profileFromSession}"
-                               data-label="${labelFromSession}" @click="${onFilterChange}" />
-                        <label for="customOption">${label}</label>
-                      </li>
-                      <li>
-                        <input name="filterBy" id="qld" type="radio" value="qld" data-profile='qld' data-scope='' @click="${onFilterChange}" ?checked=${sessionStorage.getItem('rcSelectedRadiobutton') === 'qld'}/>
-                        <label for="qld">all Queensland Government</label>
-                      </li>
-                    </ol>
-                  </fieldset>
-                </li>
-              </ol>
+                <fieldset>
+                  <legend>
+                    <span class="label">Content type</span>
+                  </legend>
+                  <div class="form-check">
+                      <input checked name="filterBy" id="customOption" class="form-check-input" type="radio" value="custom"
+                              data-scope="${scopeFromSession}"
+                              data-profile="${profileFromSession}"
+                              data-label="${labelFromSession}" @click="${onFilterChange}" />
+                      <label for="customOption" class="form-check-label">${label}</label>
+                  </div>
+                  <div class="form-check">
+                    <input name="filterBy" id="qld" class="form-check-input" type="radio" value="qld" data-profile='qld' data-scope='' @click="${onFilterChange}" ?checked=${sessionStorage.getItem('rcSelectedRadiobutton') === 'qld'}/>
+                    <label for="qld" class="form-check-label">all Queensland Government</label>
+                  </div>
+                </fieldset>
             </form>
-            <button type="button" class="qg-btn qg-btn__filter btn-primary mb-2" @click="${applyFilter}">Apply filters</button>
+            <button type="button" class="btn qld-btn__search-filter btn-primary my-2" @click="${applyFilter}">Apply filters</button>
            </div>`
 }
