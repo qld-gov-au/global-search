@@ -1,54 +1,4 @@
-#qg-two-col-aside.wide #qg-primary-content {
-    padding-left: 15px !important;
-}
-.qg-aside {
-    background-color: #fff !important;
-}
-.pagination-container {
-    margin-top: 3rem;
-}
-#qg-primary-content .qg-search-concierge-help {
-    z-index: 999;
-}
-#qg-content #qg-secondary-content .qg-aside h2 {
-    display: none;
-}
-.qld-filter-by-results {
-    margin-bottom: 2rem;
-}
-.qld-filter-by-results .qg-filter-by-results__form label, .qld-filter-by-results .qg-btn__filter, .qld-filter-by-results .qg-filter-by-results__form .label {
-    font-size: 0.8rem;
-}
-.qld-filter-by-results .qg-btn__filter {
-    margin-right: 2em;
-}
-.qld-filter-by-results .qg-filter-by-results__form .label {
-    font-weight: normal;
-}
-.qld-filter-by-results .qg-filter-by-results__title {
-    font-weight: 700;
-    border-bottom: 2px solid #000;
-    padding-bottom: 0.8em;
-}
-.qg-search-state__container {
-    color: #fff;
-    margin-top: 0.8em;
-    margin-right: 1em;
-    cursor: pointer;
-}
-.qg-search-state__container p:hover {
-    text-decoration: underline;
-}
-.qg-search-state__container .fa {
-    line-height: inherit;
-}
-
-@media (max-width: 991.98px) {
-    .qg-breadcrumb-list-item {
-        display: inherit;
-    }
-}
-
+// Search Results
 #qld-search-results__container {
     .qld-search-hint {
         display: none;
@@ -63,6 +13,7 @@
     }
 }
 
+// Related search
 #qld-related-search__container {
     .related-tags {
         .tag-list {
@@ -71,6 +22,22 @@
     }
 }
 
+// Filtering
+.qld-filter-by-results {
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--qld-border-color);
+
+    .qld-btn__search-filter {
+        margin-top: 1rem;
+    }
+
+    .qld-filter-by-results__form label {
+        font-size: 0.875rem;
+    }
+}
+
+// Pagination
 .pagination {
     .page-item .page-link {
         padding: 0 0.625rem;
