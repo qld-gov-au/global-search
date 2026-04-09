@@ -2,7 +2,9 @@ import { html, render } from 'lit-html'
 import { mainTemplate } from './main'
 import { urlParameterMap } from '../utils/urlParameter'
 import { fetchData } from '../utils/fetchData'
-import { SEARCH_RESULTS_CONTAINER_ID } from '../utils/constants'
+import { RELATED_SEARCH_CONTAINER_ID, SEARCH_RESULTS_CONTAINER_ID } from '../utils/constants'
+import { noResultsTemplate } from './no-results'
+import { errorResultsTemplate } from './error-results'
 
 export function filterResultsTemplate () {
   let label: string = ''
@@ -21,9 +23,25 @@ export function filterResultsTemplate () {
     params.set('profile', selectedRadioBtn?.getAttribute('data-profile') || '')
     params.set('page', '1')
     params.set('start_rank', '1')
+
     history.pushState({}, '', `?${params.toString()}`)
+
     fetchData(params.toString()).then(data => {
-      render(mainTemplate(data?.response, currUrlParameterMap), document.getElementById(SEARCH_RESULTS_CONTAINER_ID) as HTMLBodyElement)
+      const totalMatching = data?.response?.resultPacket?.resultsSummary?.totalMatching;
+      const spellText = data?.response?.resultPacket?.spell?.text || ''
+
+      if (totalMatching > 0) {
+        render(
+          mainTemplate(data?.response, currUrlParameterMap), 
+          document.getElementById(SEARCH_RESULTS_CONTAINER_ID) as HTMLBodyElement)
+      } else {
+        render(
+          noResultsTemplate(params.get('query') || '', '', spellText), 
+          document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
+      }
+    }).catch((err) => {
+      render(errorResultsTemplate(err, params.toString()), document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
+      render('', document.getElementById(RELATED_SEARCH_CONTAINER_ID)!)
     })
   }
 
@@ -56,12 +74,10 @@ export function filterResultsTemplate () {
   })
 
   return html`<div class="qld-filter-by-results">
-              <h2 class="h4 mt-0 pb-2 border-bottom">Filter results by</h2>
-              <form class="form qg-forms-v2 qg-filter-by-results__form">
+              <h3>Filter results by</h3>
+              <form class="qld-filter-by-results__form">
                 <fieldset>
-                  <legend>
-                    <span class="label">Content type</span>
-                  </legend>
+                  <div class="qld-text-input-label">Content type</div>
                   <div class="form-check">
                       <input checked name="filterBy" id="customOption" class="form-check-input" type="radio" value="custom"
                               data-scope="${scopeFromSession}"
@@ -70,11 +86,11 @@ export function filterResultsTemplate () {
                       <label for="customOption" class="form-check-label">${label}</label>
                   </div>
                   <div class="form-check">
-                    <input name="filterBy" id="qld" class="form-check-input" type="radio" value="qld" data-profile='qld' data-scope='' @click="${onFilterChange}" ?checked=${sessionStorage.getItem('rcSelectedRadiobutton') === 'qld'}/>
-                    <label for="qld" class="form-check-label">all Queensland Government</label>
+                    <input name="filterBy" id="qldSearchScope" class="form-check-input" type="radio" value="qld" data-profile='qld' data-scope='' @click="${onFilterChange}" ?checked=${sessionStorage.getItem('rcSelectedRadiobutton') === 'qld'}/>
+                    <label for="qldSearchScope" class="form-check-label">all Queensland Government</label>
                   </div>
                 </fieldset>
             </form>
-            <button type="button" class="btn qld-btn__search-filter btn-primary my-2" @click="${applyFilter}">Apply filters</button>
+            <button type="button" class="btn qld-btn__search-filter btn-primary" @click="${applyFilter}">Apply filters</button>
            </div>`
 }
