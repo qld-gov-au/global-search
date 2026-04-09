@@ -22,7 +22,7 @@ export function noResultsTemplate (keyword: string = '', message : string = '', 
         start_rank: String(currUrlParameterMap.startRank ?? '')
       })
     const spellTextLink = `<a href="?${params.toString()}"><span class="funnelback-highlight">${spellText}</span></a>`;
-    message = `<p>Did you mean: ${spellTextLink}? </p> ${message}`
+    message = `<p class="qld-search-results__spelltext-hint">Did you mean: ${spellTextLink}? </p> ${message}`
   }
 
   return html`${unsafeHTML(message)}`
