@@ -5,7 +5,11 @@ import { urlParameterMap } from '../utils/urlParameter'
 
 // Import Handlebars library and QGDS bundled helpers and partials
 import HandlebarsModule from 'handlebars';
-import "../../qgds-bootstrap5-release/assets/node/handlebars.init.min.js";
+import QGDSBundle from "@qld-gov-au/qgds-bootstrap5/dist/assets/node/handlebars.init.min.js";
+
+if (!HandlebarsModule || !HandlebarsModule.templates) {
+  QGDSBundle.init(HandlebarsModule);
+}
 
 // Search Input component
 import "../../qgds-bootstrap5-release-precompiled/searchInput.precompiled.js";
