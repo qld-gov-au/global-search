@@ -5,7 +5,7 @@ import { mainTemplate } from './main'
 import { loadingTemplate } from './loading'
 import { urlParameterMap } from '../utils/urlParameter'
 import { fetchData } from '../utils/fetchData'
-import { SEARCH_FORM_CONTAINER_ID } from '../utils/constants'
+import { SEARCH_FORM_CONTAINER_ID, SEARCH_RESULTS_CONTAINER_ID } from '../utils/constants'
 
 export function paginationTemplate (response: Response, paramMap: ParamMap) {
   let timer: any
@@ -31,7 +31,7 @@ export function paginationTemplate (response: Response, paramMap: ParamMap) {
     }
 
     // Show loading spinner
-    render(loadingTemplate(`Loading search results`), document.getElementById('qld-search-results__container')!)
+    render(loadingTemplate(`Loading search results`), document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
 
     // Fetch results
     timer = setTimeout(() => {
@@ -40,7 +40,7 @@ export function paginationTemplate (response: Response, paramMap: ParamMap) {
         render(
           mainTemplate(
             data?.response, currUrlParameterMap), 
-            document.getElementById('qld-search-results__container') as HTMLBodyElement
+            document.getElementById(SEARCH_RESULTS_CONTAINER_ID) as HTMLBodyElement
           )
         
         requestAnimationFrame(() => {

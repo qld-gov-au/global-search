@@ -2,6 +2,7 @@ import { html, render } from 'lit-html'
 import { mainTemplate } from './main'
 import { urlParameterMap } from '../utils/urlParameter'
 import { fetchData } from '../utils/fetchData'
+import { SEARCH_RESULTS_CONTAINER_ID } from '../utils/constants'
 
 export function filterResultsTemplate () {
   let label: string = ''
@@ -22,7 +23,7 @@ export function filterResultsTemplate () {
     params.set('start_rank', '1')
     history.pushState({}, '', `?${params.toString()}`)
     fetchData(params.toString()).then(data => {
-      render(mainTemplate(data?.response, currUrlParameterMap), document.getElementById('qld-search-results__container') as HTMLBodyElement)
+      render(mainTemplate(data?.response, currUrlParameterMap), document.getElementById(SEARCH_RESULTS_CONTAINER_ID) as HTMLBodyElement)
     })
   }
 

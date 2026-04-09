@@ -6,9 +6,11 @@ import { mainTemplate } from './main'
 import { noResultsTemplate } from './no-results'
 import { RelatedSearchClick } from '../types/clickEvents'
 import { loadingTemplate } from './loading'
-import { SEARCH_INPUT_ID, SEARCH_FORM_CONTAINER_ID } from '../utils/constants'
+import { SEARCH_INPUT_ID, SEARCH_FORM_CONTAINER_ID, SEARCH_RESULTS_CONTAINER_ID, RELATED_SEARCH_CONTAINER_ID } from '../utils/constants'
+import { errorResultsTemplate } from './error-results'
 
 export function relatedResultsTemplate (contextualNavigation: { categories: any; }) {
+  
   const onRelatedSearchClick = (e: RelatedSearchClick) => {
     e.preventDefault()
 
@@ -31,19 +33,29 @@ export function relatedResultsTemplate (contextualNavigation: { categories: any;
       behavior: 'smooth'
     })
     // Show loading spinner
-    render(loadingTemplate(`Loading search results`), document.getElementById('qld-search-results__container')!)
+    render(loadingTemplate(`Loading search results`), document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
 
     // fetch the results
     fetchData(clickedHref).then(data => {
       const contextualNavigation = data?.response?.resultPacket?.contextualNavigation
       const totalMatching = data?.response?.resultPacket?.resultsSummary?.totalMatching
+      
       if (totalMatching > 0) {
-        render(mainTemplate(data?.response, currUrlParameterMap), document.getElementById('qld-search-results__container') as HTMLBodyElement)
-        render(relatedResultsTemplate(contextualNavigation), document.getElementById('qld-related-search__container')!)
+        render(
+          mainTemplate(data?.response, currUrlParameterMap), 
+          document.getElementById(SEARCH_RESULTS_CONTAINER_ID) as HTMLBodyElement)
+        render(
+          relatedResultsTemplate(contextualNavigation), 
+          document.getElementById(RELATED_SEARCH_CONTAINER_ID)!)
       } else {
-        render(noResultsTemplate(`related search ${currUrlParameterMap.query}`), document.getElementById('qld-search-results__container')!)
-        render('', document.getElementById('qld-related-search__container')!)
+        render(
+          noResultsTemplate(`related search: '${currUrlParameterMap.query}'`), 
+          document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
+        render('', document.getElementById(RELATED_SEARCH_CONTAINER_ID)!)
       }
+    }).catch((err) => {
+      render(errorResultsTemplate(err, clickedHref), document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
+      render('', document.getElementById(RELATED_SEARCH_CONTAINER_ID)!)
     })
   }
 
