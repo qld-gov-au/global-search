@@ -2,6 +2,7 @@
 #qld-search-results__container {
     .qld-search-hint {
         display: none;
+        margin-top: 1rem;
     }
 
     &:has(> :only-child) .qld-search-hint {
