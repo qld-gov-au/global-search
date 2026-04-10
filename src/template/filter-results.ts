@@ -36,7 +36,7 @@ export function filterResultsTemplate () {
           document.getElementById(SEARCH_RESULTS_CONTAINER_ID) as HTMLBodyElement)
       } else {
         render(
-          noResultsTemplate(params.get('query') || '', '', spellText), 
+          noResultsTemplate(params.get('query') || '', spellText), 
           document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
       }
     }).catch((err) => {

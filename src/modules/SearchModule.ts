@@ -81,7 +81,7 @@ export class SearchModule {
           );
         } else {
           render(
-            noResultsTemplate(inputValue, '', spellText),
+            noResultsTemplate(inputValue, spellText),
             document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!
           );
           render("", document.getElementById(RELATED_SEARCH_CONTAINER_ID)!);
@@ -158,7 +158,7 @@ export class SearchModule {
           render(relatedResultsTemplate(contextualNavigation), document.getElementById(RELATED_SEARCH_CONTAINER_ID)!)
         }
       } else {
-        render(noResultsTemplate(this.urlParameter.query, '', spellText), document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
+        render(noResultsTemplate(this.urlParameter.query, spellText), document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
       }
 
     }).catch((err) => {
