@@ -1,10 +1,11 @@
 import Handlebars from "handlebars";
+import QGDSBundle from "@qld-gov-au/qgds-bootstrap5/dist/assets/node/handlebars.init.min.js";
 
-import dataSkipLinks from "../qgds-bootstrap5-release/sample-data/skiplinks/skipLinks.data.json";
-import dataHeader from "../qgds-bootstrap5-release/sample-data/header/header.variant.masterBrand.data.json";
-import dataNavbar from "../qgds-bootstrap5-release/sample-data/navbar/navbar.data.json";
-import dataBreadcrumbs from "../qgds-bootstrap5-release/sample-data/breadcrumbs/breadcrumbs.data.json";
-import dataFooter from "../qgds-bootstrap5-release/sample-data/footer/footer.data.json";
+import dataSkipLinks from "@qld-gov-au/qgds-bootstrap5/dist/sample-data/skiplinks/skipLinks.data.json";
+import dataHeader from "@qld-gov-au/qgds-bootstrap5/dist/sample-data/header/header.variant.masterBrand.data.json";
+import dataNavbar from "@qld-gov-au/qgds-bootstrap5/dist/sample-data/navbar/navbar.data.json";
+import dataBreadcrumbs from "@qld-gov-au/qgds-bootstrap5/dist/sample-data/breadcrumbs/breadcrumbs.data.json";
+import dataFooter from "@qld-gov-au/qgds-bootstrap5/dist/sample-data/footer/footer.data.json";
 
 // Function to load Handlebars, its helpers and precompiled templates
 async function loadHandlebars() {
@@ -12,7 +13,7 @@ async function loadHandlebars() {
     Handlebars.templates = Handlebars.templates || {};
 
     // Bundled of helpers and partials with init(Handlebars)
-    await import("../qgds-bootstrap5-release/assets/node/handlebars.init.min.js");
+    QGDSBundle.init(Handlebars);
 
     // Load precompiled templates
     await import("../qgds-bootstrap5-release-precompiled/skipLinks.precompiled.js");
