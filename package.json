@@ -10,7 +10,9 @@
     "build:css": "sass src/styles/app.scss dist/app.css --style=compressed",
     "build": "npm run clean:output && npm run build:css && parcel build src/app.ts",
     "test:e2e": "cypress open",
-    "clean:output": "rimraf dist"
+    "clean:output": "rimraf dist",
+    "lint": "eslint . --ext .ts,.js",
+    "lint:fix": "eslint . --ext .ts,.js --fix"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.27.0",
