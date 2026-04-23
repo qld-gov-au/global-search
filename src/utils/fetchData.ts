@@ -1,9 +1,9 @@
 import { render } from 'lit-html'
-import { SEARCH_API_URL, SEARCH_RESULTS_CONTAINER_ID } from './constants'
+import { SEARCH_API_URL, SEARCH_SUGGESTIONS_URL, SEARCH_RESULTS_CONTAINER_ID } from './constants'
 import { loadingTemplate } from '../template/loading'
 
 // Utility function to build fetch API URL, based on provided URLSearchParams string or full URL
-const buildFetchUrl = (url: string): string => {
+const buildFetchUrl = (url: string, isSuggestion: boolean = false): string => {
   let query = url || ''
 
   try {
@@ -21,6 +21,9 @@ const buildFetchUrl = (url: string): string => {
   }
 
   const separator = query ? '?' : ''
+  if (isSuggestion) {
+    return `${SEARCH_SUGGESTIONS_URL}${separator}${query}`
+  }
   return `${SEARCH_API_URL}${separator}${query}`
 }
 
@@ -59,42 +62,40 @@ const throwHttpError = (response: Response): void => {
  * @param url URLSearchParams string or full URL to build fetch API URL
  * @returns response JSON data or throws error
  */
-export const fetchData = async (url: string) => {
-  const fetchUrl = buildFetchUrl(url)
+export const fetchData = async (url: string, isSuggestion: boolean = false) => {
+  const fetchUrl = buildFetchUrl(url, isSuggestion)
 
-  // Set up AbortController and slow response timeouts for UI feedback and cancelling fetch request
-  const controller = new AbortController();
-  const { signal } = controller;
+  // Set up AbortController
+  // timeouts for slow response: display UI feedback and cancel Fetch request
+  const controller = new AbortController()
+  const { signal } = controller
 
-  const uiMaxTimeout = 5 * 1000; // 5 seconds
-  const requestMaxTimeout = uiMaxTimeout * 3;
+  const uiMaxTimeout = 5 * 1000 // 5 seconds
+  const requestMaxTimeout = uiMaxTimeout * 3
 
   // If data fetching takes longer than uiMaxTimeout, display 'slow' loading message
   const uiTimer = setTimeout(() => {
     render(loadingTemplate('Loading takes longer than usual...'), document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
-  }, uiMaxTimeout);
+  }, uiMaxTimeout)
 
   // If data fetching takes longer than requestMaxTimeout, abort the fetch request to prevent hanging
   const abortTimer = setTimeout(() => {
-    controller.abort(`The Search server took too long to respond ${requestMaxTimeout}s` )
-  }, requestMaxTimeout);
+    controller.abort(`The Search server took too long to respond ${requestMaxTimeout}s`)
+  }, requestMaxTimeout)
 
   // Perform fetch request with abort signal
   try {
-    const response = await fetch(fetchUrl, { signal });
+    const response = await fetch(fetchUrl, { signal })
 
     if (!response.ok) {
       throwHttpError(response)
     }
     return await response.json()
-
   } catch (error) {
-    // console.error('Error fetching data:', error);
-    throw error;
-
+    console.error('Error fetching data:', error)
+    throw error
   } finally {
-    clearTimeout(uiTimer);
-    clearTimeout(abortTimer);
+    clearTimeout(uiTimer)
+    clearTimeout(abortTimer)
   }
 }
-
