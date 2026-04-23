@@ -7,14 +7,15 @@ export const urlParameterMap = () => {
     return str?.replace(/[\\#+()$~%*?<>{}]/g, '')
   }
 
-  const collectionParam = (urlParams.get('collection') || '').replace(/\%7E/g, '~')
+  const collectionParam = (urlParams.get('collection') || '').replace(/%7E/g, '~')
 
-  // Exception to replace legacy Funnelback collection 'qgov~sp-search' with the DXP Funnelback defined on DEFAULT_SEARCH_COLLECTION.
+  // Exception 'qgov~sp-search'
+  // Replace legacy Funnelback collection 'qgov~sp-search' with the DXP Funnelback defined on DEFAULT_SEARCH_COLLECTION.
   // To prevent breaking on some agencies that still have hardcoded 'qgov~sp-search' on their search form.
   const collection = collectionParam === 'qgov~sp-search' ? DEFAULT_SEARCH_COLLECTION : collectionParam
 
   return {
-    query: rSpe((urlParams.get('query') || '').replace(/\%2F/g, '/')),
+    query: rSpe((urlParams.get('query') || '').replace(/%2F/g, '/')),
     profile: rSpe(urlParams.get('profile') || ''),
     label: rSpe(urlParams.get('label') || ''),
     filter: rSpe(urlParams.get('filter') || ''),
