@@ -39,6 +39,11 @@
     }
 }
 
+// Span wrapper - to ensure trailing spaces are displayed correctly 
+#dynamic-suggestion-autocomplete a span {
+    display: inline;
+}
+
 // Pagination
 .pagination {
     .page-item .page-link {
