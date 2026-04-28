@@ -148,7 +148,7 @@ export class SearchModule {
     }
   }
 
-  // Show default suggestions, dynamic suggestions should be hidden when default suggestions are shown 
+  // Show default suggestions, dynamic suggestions should be hidden when default suggestions are shown
   private showDefaultSuggestions () {
     if (this.defaultSuggestionsContainer) {
       this.defaultSuggestionsContainer.classList.remove('d-none')

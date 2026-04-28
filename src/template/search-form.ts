@@ -4,14 +4,16 @@ import { unsafeHTML } from 'lit-html/directives/unsafe-html.js'
 import { urlParameterMap } from '../utils/urlParameter'
 
 // Import Handlebars library and QGDS bundled helpers and partials
-import HandlebarsModule from 'handlebars'
+import Handlebars from 'handlebars'
 import QGDSBundle from '@qld-gov-au/qgds-bootstrap5/dist/assets/node/handlebars.init.min.js'
 
 // Search Input component
 import '../../qgds-bootstrap5-release-precompiled/searchInput.precompiled.js'
 
-if (!HandlebarsModule || !HandlebarsModule.templates) {
-  QGDSBundle.init(HandlebarsModule)
+// Checking to avoid registering helpers and partials (QGDSBundle init) multiple times
+// Using (!Handlebars.partials.searchInput) as a check since searchInput is used here
+if (!Handlebars || !Handlebars.templates || !Handlebars.partials.searchInput) {
+  QGDSBundle.init(Handlebars)
 }
 
 export function searchForm () {
@@ -19,7 +21,7 @@ export function searchForm () {
   const searchProfile = currUrlParameterMap.profile && currUrlParameterMap.profile.trim() !== '' ? currUrlParameterMap.profile : DEFAULT_SEARCH_PROFILE
 
   const getSearchInputHandlebars = () => {
-    return (HandlebarsModule as any).templates['searchInput.hbs']({
+    return (Handlebars as any).templates['searchInput.hbs']({
       customClass: 'search-component-inpage',
       placeholder: 'Search website',
       inputID: SEARCH_INPUT_ID,
