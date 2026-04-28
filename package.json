@@ -34,7 +34,6 @@
   "dependencies": {
     "@qld-gov-au/qgds-bootstrap5": "^2.1.16",
     "lit-html": "^2.7.5",
-    "typescript": "^5.0.4",
-    "web-template-release": "^4.0.12"
+    "typescript": "^5.0.4"
   }
 }
