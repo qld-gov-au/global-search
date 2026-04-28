@@ -23,8 +23,8 @@ export class SearchModule {
     render(searchForm(), document.getElementById(SEARCH_FORM_CONTAINER_ID)!)
 
     this.siteInput = document.getElementById(SEARCH_INPUT_ID) as HTMLInputElement | null
-    this.defaultSuggestionsContainer = document.querySelector('.default-suggestions') as HTMLElement
-    this.dynamicSuggestionsContainer = document.querySelector('.dynamic-suggestions') as HTMLElement
+    this.defaultSuggestionsContainer = document.querySelector(`#${SEARCH_FORM_CONTAINER_ID} .default-suggestions`) as HTMLElement
+    this.dynamicSuggestionsContainer = document.querySelector(`#${SEARCH_FORM_CONTAINER_ID} .dynamic-suggestions`) as HTMLElement
 
     this.bindSearchFormEvents()
 
