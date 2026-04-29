@@ -39,9 +39,22 @@
     }
 }
 
-// Span wrapper - to ensure trailing spaces are displayed correctly 
-#dynamic-suggestion-autocomplete a span {
-    display: inline;
+// Suggestions
+.default-suggestions {
+    background-color: var(--qld-color-default-color-light-background-default-shade);
+}
+
+#dynamic-suggestion-autocomplete {
+    background-color: var(--qld-default-background);
+
+    // Span wrapper - to ensure trailing spaces are displayed correctly 
+    a span {
+        display: inline;
+    }
+}
+
+#dynamic-suggestion-feature {
+    background-color: var(--qld-color-default-color-light-background-default-shade);
 }
 
 // Pagination
