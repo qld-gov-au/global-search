@@ -1,24 +1,27 @@
 import { html } from 'lit-html'
-import { search_url } from '../utils/constants'
+import { SEARCH_BASE_URL } from '../utils/constants'
 
 export function featuredResultsTemplate (exhibits: any[]) {
-  return html`<h2 class="search-results-summary">Featured results</h2>
-    ${exhibits.map((item, index) => {
-                return html`
-                    <article class="qg-card qg-card__light-theme qg-card__clickable">
-                        <div class="content">
-                            <div class="details">
-                                <h2 class="qg-card__title">
-                                    <a href="${search_url}${item.linkUrl}" class="stretched-link">${item.titleHtml}</a>
-                                </h2>
-                                <div class="qg-search-results__results-list">
-                                    <p class="description">${item.descriptionHtml}</p>
-                                    <p class="qg-search-results__url">${item.displayUrl}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </article>`
+  return html`
+    <div id="qld-featured-results">
+        <h2 class="mt-0">Featured results</h2>
+        <div class="card-group mb-5">
+        ${exhibits.map((item, index) => {
+            return html`
+                <article class="card card__light-theme">
+                    <div class="card-body">
+                        <h3 class="card-title fs-5">
+                            <a href="${SEARCH_BASE_URL}${item.linkUrl}" class="stretched-link">${item.titleHtml}</a>
+                        </h3>
+                        <p class="card-text">
+                            ${item.descriptionHtml}
+                        </p>
+                    </div>
+                </article>
+            `
             }
-    )}
+        )}
+        </div>
+    </div>
   `
 }

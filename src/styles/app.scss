@@ -1,0 +1,150 @@
+// Search Results
+#qld-search-results__container {
+    .qld-search-hint {
+        display: none;
+        margin-top: 1rem;
+    }
+
+    &:has(> :only-child) .qld-search-hint {
+        display: block;
+    }
+
+    .qld-search-results__error-hint {
+        margin-block: 1rem;
+        overflow-wrap: break-word;
+    }
+}
+
+// Related search
+#qld-related-search__container {
+    .related-tags {
+        .tag-list {
+            padding: 0;
+        }
+    }
+}
+
+// Filtering
+.qld-filter-by-results {
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--qld-border-color);
+
+    .qld-btn__search-filter {
+        margin-top: 1rem;
+    }
+
+    .qld-filter-by-results__form label {
+        font-size: 0.875rem;
+    }
+}
+
+// Suggestions
+.default-suggestions {
+    background-color: var(--qld-color-default-color-light-background-default-shade);
+}
+
+#dynamic-suggestion-autocomplete {
+    background-color: var(--qld-default-background);
+
+    // Span wrapper - to ensure trailing spaces are displayed correctly 
+    a span {
+        display: inline;
+    }
+}
+
+#dynamic-suggestion-feature {
+    background-color: var(--qld-color-default-color-light-background-default-shade);
+}
+
+// Pagination
+.pagination {
+    .page-item .page-link {
+        padding: 0 0.625rem;
+        width: auto;
+        min-width: 2rem;
+    }
+    .page-item.previous .page-link {
+        padding-left: 0;
+    }
+    .page-item.next .page-link {
+        padding-right: 0;
+    }
+    
+    // Remove hover state (bg color) from the pagination ellipsis, since it is not a clickable element.
+    .page-item.more span:hover:before {
+        background-color: var(--action-icon-more-color);
+    }
+    
+    .page-item.more.mobile-only-ellipsis {
+        display: none;
+    }
+
+    // Pagination rules according to the Design System
+    @media (max-width: 400px) {
+        // Show ellipsis on mobile
+        .page-item.more { 
+            display: list-item; 
+        }
+
+        .page-item.more.mobile-only-ellipsis {
+            display: list-item;
+        }
+        
+        // Hide Previous/Next span text on medium screen and smaller.
+        .page-item.previous .page-link span,
+        .page-item.next .page-link span {
+            display: none;
+        }
+        
+        // Show Previous/Next arrow
+        .page-item.previous,
+        .page-item.next {
+            display: list-item;
+        }
+        
+        // Hide all page numbers by default
+        .page-item { display: none; }
+        
+        // Show "First, Last, Active" page number
+        .page-item.first-page,
+        .page-item.last-page,
+        .page-item.active {
+            display: list-item;
+        }
+        
+        
+        // First page is active
+        // -- Show 2, 3,  and last
+        &.active-is-first .page-item.second-page,
+        &.active-is-first .page-item.third-page {
+            display: list-item;
+        }
+        
+        // Last page is active
+        // Show = last-2, last-1, and last
+        &.active-is-last .page-item.one-before-last,
+        &.active-is-last .page-item.two-before-last{
+            display: list-item;
+        }
+        
+        
+        //----- Before / After Active -----
+
+        // Always hide before and after active
+        .page-item.before-active,
+        .page-item.after-active {
+            display: none;
+        }
+    
+        // Only show before and after active when second and second-to-last page is active.
+        &.active-is-second .page-item.before-active,
+        &.active-is-second .page-item.after-active,
+        &.active-is-second-to-last .page-item.before-active,
+        &.active-is-second-to-last .page-item.after-active {
+            display: list-item;
+        }
+        // End of: Before / After Active -----
+    }
+    
+}

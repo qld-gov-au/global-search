@@ -1,44 +1,83 @@
 import { html, render } from 'lit-html'
+import { unsafeHTML } from 'lit-html/directives/unsafe-html'
 import { urlParameterMap } from '../utils/urlParameter'
 import { fetchData } from '../utils/fetchData'
 import { mainTemplate } from './main'
 import { noResultsTemplate } from './no-results'
 import { RelatedSearchClick } from '../types/clickEvents'
+import { loadingTemplate } from './loading'
+import { SEARCH_INPUT_ID, SEARCH_FORM_CONTAINER_ID, SEARCH_RESULTS_CONTAINER_ID, RELATED_SEARCH_CONTAINER_ID } from '../utils/constants'
+import { errorResultsTemplate } from './error-results'
 
 export function relatedResultsTemplate (contextualNavigation: { categories: any; }) {
+  
   const onRelatedSearchClick = (e: RelatedSearchClick) => {
     e.preventDefault()
-    const clickedHref = e.target.href
-    const clickedVal = e.target.textContent
+
+    let target = e?.target as unknown as HTMLElement
+    // In case the click event is triggered from <A> tag's child element.
+    if (target?.tagName !== 'A') {
+      target = target.closest('a') as HTMLElement;
+    }
+    const clickedHref = (target as HTMLAnchorElement).href;
+    const clickedVal = target.textContent;
     const currUrlParameterMap = urlParameterMap();
-    (document.querySelector('.qg-site-search__component .qg-search-site__input') as HTMLInputElement).value = clickedVal
+
+    (document.getElementById(SEARCH_INPUT_ID) as HTMLInputElement).value = clickedVal;
 
     // push in the history stack
     history.pushState({}, '', `${clickedHref}`)
+
+    // Scroll to the top
+    document.getElementById(SEARCH_FORM_CONTAINER_ID)?.scrollIntoView({
+      behavior: 'smooth'
+    })
+    // Show loading spinner
+    render(loadingTemplate(`Loading search results`), document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
 
     // fetch the results
     fetchData(clickedHref).then(data => {
       const contextualNavigation = data?.response?.resultPacket?.contextualNavigation
       const totalMatching = data?.response?.resultPacket?.resultsSummary?.totalMatching
+      
       if (totalMatching > 0) {
-        render(mainTemplate(data?.response, currUrlParameterMap), document.getElementById('qg-search-results__container') as HTMLBodyElement)
-        render(relatedResultsTemplate(contextualNavigation), document.getElementById('related-search__tags')!)
+        render(
+          mainTemplate(data?.response, currUrlParameterMap), 
+          document.getElementById(SEARCH_RESULTS_CONTAINER_ID) as HTMLBodyElement)
+        render(
+          relatedResultsTemplate(contextualNavigation), 
+          document.getElementById(RELATED_SEARCH_CONTAINER_ID)!)
       } else {
-        render(noResultsTemplate('No results found'), document.getElementById('qg-search-results__container')!)
-        render('', document.getElementById('related-search__tags')!)
+        render(
+          noResultsTemplate(`related search: '${currUrlParameterMap.query}'`), 
+          document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
+        render('', document.getElementById(RELATED_SEARCH_CONTAINER_ID)!)
       }
+    }).catch((err) => {
+      render(errorResultsTemplate(err, clickedHref), document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
+      render('', document.getElementById(RELATED_SEARCH_CONTAINER_ID)!)
     })
+  }
+
+  const labelFormat = (label: string) => {
+    const urlParameter = urlParameterMap()
+    return html`${unsafeHTML(label.replace('...', `<strong> ${urlParameter.query} </strong>`).replace(/`/g, ''))}`;
   }
 
   if (contextualNavigation) {
     const { categories } = contextualNavigation
     for (let i = 0; i < categories.length; i++) {
       if (categories[i]?.name === 'topic') {
-        return html` <section class="related-search__tags">
-            ${categories[i]?.clusters.map((item: any) =>
-              html`<a @click="${(e: RelatedSearchClick) => onRelatedSearchClick(e)}" href="${item.href}&start_rank=1" class="qg-btn btn-outline-dark m-1">${item.query}</a>`
-          )}
-        </section>`
+        return html`
+          <h3 class="related-search-title">Related search</h3>
+          <div id="related-search__tags" class="related-tags">
+            <ul class="tag-list" aria-label="Related search navigation" role="navigation">
+              ${categories[i]?.clusters.map((item: any) =>
+                html`<li class="tag-item tag-link tag-large mt-0"><a @click="${(e: RelatedSearchClick) => onRelatedSearchClick(e)}" href="${item.href}&start_rank=1">${labelFormat(item.label)}</a></li>`
+            )}
+            </ul>
+          </div>
+        `
       }
     }
   }
