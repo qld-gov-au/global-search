@@ -1,4 +1,3 @@
-import { render } from 'lit-html'
 import { DEFAULT_SEARCH_PROFILE, DEFAULT_SEARCH_COLLECTION, DEFAULT_SEARCH_NUMRANKS, DEFAULT_SEARCH_DYNAMIC_SUGGESTIONS, SEARCH_INPUT_ID, SEARCH_SUBMIT_ID, SEARCH_FORM_CONTAINER_ID, SEARCH_RESULTS_CONTAINER_ID, RELATED_SEARCH_CONTAINER_ID } from '../utils/constants'
 import { urlParameterMap } from '../utils/urlParameter'
 import { fetchData } from '../utils/fetchData'
@@ -8,6 +7,8 @@ import { noResultsTemplate } from '../template/no-results'
 import { errorResultsTemplate } from '../template/error-results'
 import { searchForm } from '../template/search-form'
 import { loadingTemplate } from '../template/loading'
+import { html, render } from 'lit-html'
+import { unsafeHTML } from 'lit-html/directives/unsafe-html'
 
 export class SearchModule {
   private readonly siteInput: HTMLInputElement | null
@@ -78,28 +79,48 @@ export class SearchModule {
 
     // Fetch data and render results
     fetchData(params.toString()).then((data) => {
-      const contextualNavigation = data?.response?.resultPacket?.contextualNavigation
-      const totalMatching = data?.response?.resultPacket?.resultsSummary?.totalMatching
       const spellText = data?.response?.resultPacket?.spell?.text || ''
-
-      if (totalMatching > 0) {
-        render(
-          mainTemplate(data?.response, currUrlParameterMap),
-          document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!
-        )
-        render(
-          relatedResultsTemplate(contextualNavigation),
-          document.getElementById(RELATED_SEARCH_CONTAINER_ID)!
-        )
-      } else {
-        render(
-          noResultsTemplate(inputValue, spellText),
-          document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!
-        )
-        render('', document.getElementById(RELATED_SEARCH_CONTAINER_ID)!)
-      }
+      this.renderSearchResponse(data, params, inputValue, spellText)
     }).catch((error) => {
       render(errorResultsTemplate(error, params.toString()), document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
+    })
+  }
+
+  private onSuggestionClick = (e: Event, params: URLSearchParams) => {
+    e.preventDefault()
+
+    const clickedLink = (e.target as HTMLElement).closest('a') as HTMLAnchorElement | null
+    if (!clickedLink) {
+      return
+    }
+    const clickedHref = clickedLink.href
+
+    clearTimeout(this.inputTimeoutId)
+    this.hideAllSuggestions(e)
+
+    const inputValue = params.get('query') || ''
+
+    if (this.siteInput) {
+      this.siteInput.value = inputValue
+    }
+
+    // push in the history stack
+    history.pushState({}, '', `${clickedHref}`)
+
+    // Scroll to the top
+    document.getElementById(SEARCH_FORM_CONTAINER_ID)?.scrollIntoView({
+      behavior: 'smooth'
+    })
+
+    // Show loading spinner
+    render(loadingTemplate('Loading search results'), document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
+
+    // fetch the results
+    fetchData(params.toString()).then(data => {
+      this.renderSearchResponse(data, params, inputValue)
+    }).catch((err) => {
+      render(errorResultsTemplate(err, params.toString()), document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
+      render('', document.getElementById(RELATED_SEARCH_CONTAINER_ID)!)
     })
   }
 
@@ -167,7 +188,7 @@ export class SearchModule {
   // Hide dynamic suggestions section and clear its content
   private hideDynamicSuggestionSection (container: HTMLElement) {
     container.classList.add('d-none')
-    container.innerHTML = ''
+    render('', container)
   }
 
   // Bind event listeners for search form input and button
@@ -264,9 +285,9 @@ export class SearchModule {
     fetchData(suggestionParams.toString(), true)
       .then(data => {
         const totalSuggestions = data.length || 0
-
         if (totalSuggestions === 0) {
           this.hideDynamicSuggestionSection(autoCompleteContainer)
+          this.dynamicSuggestionsContainer?.classList.add('d-none')
           return
         }
 
@@ -289,14 +310,16 @@ export class SearchModule {
             tiers: 'off',
             start_rank: String(this.urlParameter.startRank ?? '')
           })
+
           const suggestionLink = `?${params.toString()}`
 
-          return `<li><a tabindex='0' href='${suggestionLink}'><span>${highlightedText}</span></a></li>`
-        }
-        ).join('')
-
-        autoCompleteContainer.innerHTML = `<ul>${resultsHtml}</ul>`
-
+          return html`<li>
+                        <a tabindex='0' href='${suggestionLink}' @click=${(e: Event) => this.onSuggestionClick(e, params)}>
+                          <span>${unsafeHTML(highlightedText)}</span>
+                        </a>
+                      </li>`
+        })
+        render(html`<ul>${resultsHtml}</ul>`, autoCompleteContainer)
         this.showDynamicSuggestionSection(autoCompleteContainer)
       })
       .catch((error) => {
@@ -321,22 +344,50 @@ export class SearchModule {
 
         // Process response data and render the HTML
         const viewMoreUrl = this.dynamicSuggestionsContainer?.getAttribute('data-view-more') || ''
-        const viewMoreLink = viewMoreUrl ? `<li><a tabindex='0' href='${viewMoreUrl}' class='view-more'>View more</a></li>` : ''
+        const viewMoreLink = viewMoreUrl ? html`<li><a tabindex='0' href='${viewMoreUrl}' class='view-more'>View more</a></li>` : ''
 
         const suggestionsToShow = featuredSuggestion.slice(0, 4)
         const resultsHtml = suggestionsToShow.map((item) => {
-          return `<li><a tabindex='0' href='${item.liveUrl}'>${item.title}</a></li>`
+          return html`<li><a tabindex='0' href='${item.liveUrl}'>${item.title}</a></li>`
         })
 
-        featureSuggestionsContainer.innerHTML = `
-            <strong class='suggestions-category-label d-block'>Related services</strong>
-            <ul>${resultsHtml.join('')} ${viewMoreLink}</ul>`
+        render(html`<strong class='suggestions-category-label d-block'>Related services</strong>
+                    <ul>${resultsHtml} ${viewMoreLink}</ul>`,
+        featureSuggestionsContainer
+        )
 
         this.showDynamicSuggestionSection(featureSuggestionsContainer)
       })
       .catch((error) => {
         console.error('Error fetching featured suggestion:', error)
       })
+  }
+
+  // Render search results and related search templates based on API response
+  private renderSearchResponse (data: any, urlParams: any, inputValue: string, spellText: string = '') {
+    const totalMatching = data?.response?.resultPacket?.resultsSummary?.totalMatching
+    const contextualNavigation = data?.response?.resultPacket?.contextualNavigation
+
+    if (totalMatching > 0) {
+      render(
+        mainTemplate(data?.response, urlParams),
+        document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!
+      )
+      render(
+        relatedResultsTemplate(contextualNavigation),
+        document.getElementById(RELATED_SEARCH_CONTAINER_ID)!
+      )
+      return
+    }
+
+    render(
+      noResultsTemplate(inputValue, spellText),
+      document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!
+    )
+    render(
+      '',
+      document.getElementById(RELATED_SEARCH_CONTAINER_ID)!
+    )
   }
 
   /**
@@ -346,7 +397,7 @@ export class SearchModule {
   processData () {
     const params = new URLSearchParams({
       query: this.urlParameter.query ?? '',
-      collection: this.urlParameter.collection ?? '',
+      collection: this.urlParameter.collection || DEFAULT_SEARCH_COLLECTION,
       profile: this.urlParameter.profile ?? '',
       scope: this.urlParameter.scope ?? '',
       start_rank: String(this.urlParameter.startRank ?? '')
@@ -354,19 +405,8 @@ export class SearchModule {
 
     fetchData(params.toString())
       .then(data => {
-        const contextualNavigation = data?.response?.resultPacket?.contextualNavigation
-        const totalMatching = data?.response?.resultPacket?.resultsSummary?.totalMatching
         const spellText = data?.response?.resultPacket?.spell?.text || ''
-
-        if (totalMatching > 0) {
-          render(mainTemplate(data?.response, this.urlParameter), document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
-          if (contextualNavigation) {
-            render(relatedResultsTemplate(contextualNavigation), document.getElementById(RELATED_SEARCH_CONTAINER_ID)!)
-          }
-        } else {
-          render(noResultsTemplate(this.urlParameter.query, spellText), document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
-          render('', document.getElementById(RELATED_SEARCH_CONTAINER_ID)!)
-        }
+        this.renderSearchResponse(data, params, this.urlParameter.query, spellText)
       }).catch((error) => {
         render(errorResultsTemplate(error, params.toString()), document.getElementById(SEARCH_RESULTS_CONTAINER_ID)!)
       })
